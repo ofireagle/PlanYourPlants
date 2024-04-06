@@ -1,6 +1,8 @@
 const Plant = require('../models/plantsModel')
 const Family = require('../models/familiesModel');
 const User = require('../models/usersModel');
+const Locations = require('../models/locationsModel');
+const MethodOfIrrigation = require('../models/methodOfIrrigationModel');
 const asyncWrapper = require('../middleware/async');
 const {createCustomError} = require('../middleware/custom-error');
 const sharp = require('sharp');
@@ -199,29 +201,40 @@ exports.getPlan = asyncWrapper(async(req, res, next) => {
     if(!mongoose.Types.ObjectId.isValid(user_id)) return next(createCustomError('Not Valid id !', 400))
     const user = await User.findById(user_id)
     if(!user) return next(createCustomError('Not Found', 404));
-    //console.log("get plannnnn");
-    //console.log("user -> ", user.city );
+    // console.log("get plannnnn");
+    // console.log("user -> ", user.city );
     const weather_api = new WeatherApi(process.env.WEATHER_API_KEY);
     const weatherData = await weather_api.getCurrentWeather(user.city);
 
     const plants = await Plant.find({'_id' : { $in: user.plants } });
     if(!plants) return next(createCustomError('Bad data', 400));
-    // console.log("plants ",plants);
-    const families = new Set();
+    console.log("plants ", plants);
+    var families = [];
     for (let i = 0; i < plants.length; i++){
         const family_id = plants[i].family  //צריך להכניס מזהה משפחה בכל הצמחים ולהגדיר את היוצר בשם זהה לכולם
         if(!mongoose.Types.ObjectId.isValid(family_id)){
             return next(createCustomError("Not valid id", 404))
         }
-        const family = await Family.findById(family_id)
-        if(!family){
+        let f = await Family.findById(family_id)
+        if(!f){
             return next(createCustomError("Not Found", 404))
         }
-        families.add(family);
+        let family = {};
+        family._id = f._id;
+        family.name = f.family_name;
+        family.frequency_of_irrigation = f.frequency_of_irrigation;
+        family.humidity = f.humidity;
+        family.location =  (await Locations.findById(f.location)).location;
+        family.method_of_irrigation = (await MethodOfIrrigation.findById(f.method_of_irrigation)).method;
+        family.optimal_weather = f.optimal_weather;
+        console.log("family", family)
+        families.push(family);
     }
-
+    families = families.filter((obj, index, self) =>
+        index === self.findIndex((t) => (t._id.equals(obj._id))));
+    console.log("families", families);
     const main_api = await MainApi.calculate(user.date_created, plants, families, weatherData.current.temp_c);
-    console.log(main_api);
+    console.log("main_api", main_api);
     res.status(200).json({
         status:'success',
         details: main_api

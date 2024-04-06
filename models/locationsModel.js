@@ -15,5 +15,5 @@ locationSchema.pre('save', async function (next) {
     next();
 });
 
-const Location = mongoose.model('Location', locationSchema);
-module.exports = Location;
+const Locations = mongoose.model('Locations', locationSchema);
+module.exports = Locations;
