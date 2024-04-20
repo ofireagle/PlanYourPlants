@@ -3,8 +3,8 @@ const asyncWrapper = require('../middleware/async');
 const {createCustomError} = require('../middleware/custom-error')
 const APIFiltering = require('../middleware/APIFiltering');
 const Plant = require('../models/plantsModel');
-const {view, scopedFilter} = require('../db/userPermissions');
 const { default: mongoose } = require('mongoose');
+const authController = require('./authControllers') 
 
 
 const filterObj = (obj, ...allowedFields) => {
@@ -65,8 +65,13 @@ exports.getUserByToken = asyncWrapper(async (req,res, next) =>{
 });
 
 exports.updateUser = asyncWrapper(async (req, res, next) =>{
-    const user_id = req.user._id
-    const user = await User.findOneAndUpdate({_id:user_id},req.body,{
+    let user_id = req.user._id
+    //בדיקה במקרה ואדמין רוצה לערוך את היוזר 
+    if(req.body.userID){
+        user_id = req.body.userID;
+    }
+    let userObj = filterObj(req.body, 'name', 'email', 'phone', 'city', 'country', 'plants', 'newPlants')
+    const user = await User.findOneAndUpdate({_id:user_id},userObj,{
         new:true,
         runValidators:true
     })
