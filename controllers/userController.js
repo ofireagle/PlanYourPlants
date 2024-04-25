@@ -6,7 +6,6 @@ const Plant = require('../models/plantsModel');
 const { default: mongoose } = require('mongoose');
 const authController = require('./authControllers') 
 
-
 const filterObj = (obj, ...allowedFields) => {
     const filteredObj = {}
     Object.keys(obj).forEach(key => {
@@ -52,7 +51,6 @@ exports.getUser = asyncWrapper(async (req,res, next) =>{
         details:user
     })
 });
-
 
 exports.getUserByToken = asyncWrapper(async (req,res, next) =>{
     if(!req.user){
@@ -101,9 +99,8 @@ exports.deletePlantFromUserList = asyncWrapper(async (req, res, next) =>{
     const {plants} = req.body
     const user = req.user
     const matchingPlantIds = user.plants.filter((id) => plants.includes(id.toString()));
-    console.log(matchingPlantIds);
     if(matchingPlantIds.length === 0) return next(createCustomError('Not Found this plants id in user list',404))
-    const resp = await User.findOneAndUpdate(
+    await User.findOneAndUpdate(
         { _id: user._id },
         { $pull: { plants: { $in: matchingPlantIds } } }
     ); 
@@ -131,7 +128,6 @@ exports.getPlantsList = asyncWrapper(async (req, res, next) => {
     });
   });
   
-
 exports.addPlantToUser =  asyncWrapper(async (req, res, next) =>{
     const userID = req.user._id;
     const plantID = req.body.plantID;

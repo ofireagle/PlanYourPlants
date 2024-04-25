@@ -2,8 +2,6 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const validator = require('validator');
 const crypto = require('crypto');
-const role = require('./roleModel');
-const { string } = require('joi');
 
 const userSchema = new mongoose.Schema({
     name:{
@@ -38,12 +36,6 @@ const userSchema = new mongoose.Schema({
             },
             message:"passwords not match, try again"
         },
-        // validator:{
-        //     function(el){
-        //         return el === this.password
-        //     },
-        //     message:"passwords not match, try again"
-        // }
     },
     phone:{
         type:String,
@@ -87,7 +79,6 @@ const userSchema = new mongoose.Schema({
     passwordChangedAt: Date,
 });
 
-
 userSchema.pre( 'save', async function ( next )
 {
     if ( !this.isModified( 'password' ) ) return next();
@@ -114,19 +105,5 @@ userSchema.methods.createPasswordResetToken = function ()
     return resetToken;
 };
 
-
-// module.exports = mongoose.model("User", userSchema);
 const User = mongoose.model( 'User', userSchema );
 module.exports = User;
-
-
-// exports.validUser = (body_data) =>{
-//     let joiSchema = joi.object({
-//         name:joi.string().min(5).max(40).required(),
-//         age:joi.number().min(10).max(120),
-//         email:joi.string().email().required(),
-//         password:joi.string().min(8).max(30).required(),
-//     })
-
-//     return joiSchema.validate(body_data);
-// }

@@ -9,8 +9,6 @@ class PlantApi {
   async identifyPlant(imageFile) {
     const base64Image = await this.fileToBase64(imageFile);
 
-    //console.log(base64Image);
-
     const data = JSON.stringify({
       api_key: this.apiKey,
       images: [base64Image],

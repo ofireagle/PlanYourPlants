@@ -10,11 +10,9 @@ const locationR = require('./routes/locationRoute');
 const methodR = require('./routes/methodRoute');
 const app = express();
 
-
 app.use(morgan('dev'));
 
 app.use(cors());
-
 
 app.use(express.static('/public'));
 app.use(express.json());
@@ -27,8 +25,5 @@ app.use('/api/methods', methodR)
 
 app.use(errorHandler);
 app.use(notFound);
-
-
-
 
 module.exports = app;

@@ -35,7 +35,6 @@ const createAndSendToken = (user, statusCode, res) => {
     
     res.cookie('jwt', token, cookieOptions)
 
-    //console.log(user);
     user
     res.status(statusCode).json({
     status: 'success',
@@ -47,7 +46,7 @@ const createAndSendToken = (user, statusCode, res) => {
 exports.signUp = asyncWrapper(async(req, res, next )=>{
     const data = filterObj(req.body, 'name', 'email', 'password', 'passwordConfirm', 'phone', 'city', 'country')
     if(!data){
-        return next(createCustomError("Bad data insert !!!!!!!", 404));
+        return next(createCustomError("Bad data insert!", 404));
     }
     const user = await User.create(data)
     createAndSendToken(user, 200, res)
@@ -56,7 +55,7 @@ exports.signUp = asyncWrapper(async(req, res, next )=>{
 exports.login = asyncWrapper(async(req, res, next )=>{
     const {email, password} = req.body
     if(!email || !password){
-        return next(createCustomError('must enter email and password !', 404));
+        return next(createCustomError('must enter email and password!', 404));
     }
     const user = await User.findOne({email}).select('+password')
     if(!user){
@@ -78,7 +77,6 @@ exports.protect = asyncWrapper(async(req, res, next) =>{
     if(!decoded){
         return next(createCustomError('token not valid', 403));
     }
-    //console.log(decoded.id);
     const user = await User.findById(decoded.id);
     if(!user){
         return next(createCustomError('somthing went wrong, try again', 403));
@@ -93,12 +91,8 @@ exports.forgotPassword = asyncWrapper(async (req, res, next) => {
     if (!user) return next(createCustomError("We havent found user with this email",404));
     const resetToken = user.createPasswordResetToken()
     await user.save({ validateBeforeSave: false });
-    // console.log("user -- ",user);
-    // const resetUrl = `${req.protocol}://${req.get('host')}/users/resetPassword/${resetToken}`;
     const resetUrl = `${req.protocol}://${req.get('host')}/api/users/resetPassword/${resetToken}`;
     const resetForm = `http://localhost:3000/resetPassword?token=${resetToken}`;
-
-    // console.log(resetUrl);
   
     const message1 = `Please follow this link to reset your password. The link is valid for 10 min ${resetForm}`
     const message = `

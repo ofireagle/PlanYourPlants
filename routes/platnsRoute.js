@@ -2,7 +2,6 @@ const express = require('express');
 const router = express.Router();
 const plantController = require('../controllers/plantController');
 const authController = require('../controllers/authControllers');
-const userControllers = require('../controllers/userController')
 const multer = require("multer");
 const Upload = multer();
 
@@ -14,9 +13,6 @@ router.route('/addNew')
 
 router.route('/getPlants')
     .post(plantController.getPlants)
-
-// router.route('/uploadImages')
-//     .post(authController.protect, plantController.uploadPhotos, plantController.resizeUserPhoto,userControllers.addImages)
 
 router.route('/identifyPlant')
     .post(authController.protect, Upload.single('image'), plantController.IdentifyPlant);
@@ -34,11 +30,9 @@ router.route('/getPlan/:id')
 router.route('/search')
     .get(plantController.searchPlants)
 
-
 router.route('/:id')
     .patch(plantController.updatPlant)
     .get(plantController.getPlant)
     .delete(plantController.deletePlant)
-
 
 module.exports = router;

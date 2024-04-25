@@ -16,5 +16,4 @@ router.route('/:id')
     .patch(familyController.updateFamily)
     .delete(familyController.deleteFamily)
 
-
 module.exports = router;

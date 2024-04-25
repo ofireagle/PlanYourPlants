@@ -17,7 +17,4 @@ router.route('/getOne/:id')
 router.route('/updateOne/:id')
     .patch(methodController.editMethod)
 
-
-
-
 module.exports = router;
