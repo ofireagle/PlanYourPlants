@@ -6,7 +6,6 @@ const { promisify } = require('util');
 const crypto = require('crypto')
 const sendEmail = require('../middleware/email');
 
-
 const filterObj = (obj, ...allowedFields) => {
     const filteredObj = {}
     Object.keys(obj).forEach(key => {
@@ -191,4 +190,4 @@ exports.resetPassword = asyncWrapper(async (req, res, next) => {
 
     await user.save()
     createAndSendToken(user, 200, res);
-})
+});

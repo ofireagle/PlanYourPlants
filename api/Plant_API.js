@@ -1,5 +1,4 @@
 const https = require('https');
-const fs = require('fs');
 
 class PlantApi {
   constructor(apiKey) {

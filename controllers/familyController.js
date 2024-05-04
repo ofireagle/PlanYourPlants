@@ -44,7 +44,6 @@ exports.createFamily = asyncWrapper(async (req, res, next) => {
     });
 });
 
-
 //update
 exports.updateFamily = asyncWrapper(async (req, res, next) =>{
   const {id:family_id} = req.params
@@ -75,7 +74,6 @@ exports.deleteFamily = asyncWrapper(async (req, res, next) =>{
           details:`family ${family.family_name} is deleted succesfully`
       })
 });
-
 
 //search family by name
 exports.searchFamilies = asyncWrapper(async (req, res, next) => {
@@ -114,4 +112,3 @@ exports.getFamily = asyncWrapper(async (req,res, next) =>{
       data:family
   })
 });
-

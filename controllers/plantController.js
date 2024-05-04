@@ -13,24 +13,6 @@ const PlantApi = require('../api/Plant_API');
 const MainApi = require('../api/Main_API');
 const APIFiltering = require('../middleware/APIFiltering')
 
-
-// const multerStorage = multer.memoryStorage();
-// const multerFilter = (req, file, cb) => {
-//     if (file.mimetype.startsWith('image'))
-//       cb(null, true)
-//     else
-//       cb(new AppError(404, 'Can only upload image'), false)
-// };
-
-// const upload = multer({
-//     storage: multerStorage,
-//     fileFilter: multerFilter
-// });
-
-// exports.uploadPhotos = upload.array('images', 6);
-
-// const Upload = multer();
-
 exports.resizeUserPhoto = (req, res, next) =>{
       req.body.images = [];
     Promise.all(req.files.map(async(file, i) =>{
@@ -53,8 +35,7 @@ const filterObj = (obj, ...allowedFields) => {
       }
     })
     return filteredObj;
-  }
-
+}
 
 exports.addPlant = asyncWrapper(async (req, res, next) => {
     const plantDetails = filterObj(req.body, 'name', 'family', 'creator', 'imgUrl', 'description');
@@ -101,8 +82,7 @@ exports.getPlant = asyncWrapper(async (req, res, next) =>{
         status:'success',
         details:plant
     })
-})
-
+});
 
 exports.updatPlant = asyncWrapper(async (req, res, next) =>{
     const {id:plant_id} = req.params
@@ -147,7 +127,7 @@ exports.getAllPlants = asyncWrapper( async(req, res, next) =>{
         count:plants.length,
         details:plants
     })
-})
+});
 
 exports.getPlants = asyncWrapper(async(req, res, next) =>{
     const ids = req.body.plants;
@@ -157,7 +137,7 @@ exports.getPlants = asyncWrapper(async(req, res, next) =>{
         status:'success',
         details:plants
     })
-})
+});
 
 exports.searchPlants = asyncWrapper(async (req, res, next) => {
     const searchQuery = req.query.q;
@@ -193,7 +173,7 @@ exports.getWeather = asyncWrapper(async(req, res, next) => {
         status:'success',
         details:weatherData
     })
-})
+});
 
 exports.getPlan = asyncWrapper(async(req, res, next) => {
     const {id:user_id} = req.params;
@@ -233,7 +213,7 @@ exports.getPlan = asyncWrapper(async(req, res, next) => {
         details: main_api
     })
     
-})
+});
 
 exports.getRadmonPlant = asyncWrapper(async (req, res, next) =>{
     const countAll = await Plant.count();
@@ -244,7 +224,7 @@ exports.getRadmonPlant = asyncWrapper(async (req, res, next) =>{
         index:randomNumber + 1,
         details:radmonPlant
     })
-})
+});
 
 const findMatch = async (array) => {
     for (const item of array) {

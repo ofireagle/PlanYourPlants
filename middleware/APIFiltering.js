@@ -3,6 +3,7 @@ class APIfIltering {
         this.modelQuery = modelQuery;
         this.reqQuery = reqQuery;
     }
+
     filter() {
         const filterObj =  { ...this.reqQuery };
         const filteredOut = ['sort','page','limit','fields'];
@@ -10,6 +11,7 @@ class APIfIltering {
         this.modelQuery = this.modelQuery.find(filterObj);
         return this;
     }
+
     sort() {
         if(this.reqQuery.sort){ 
             const sortObj = this.reqQuery.sort.split(',').join(" ");
@@ -17,6 +19,7 @@ class APIfIltering {
         }
         return this;
     }
+
     select() {
         let fields;
         if (this.reqQuery.fields) {
@@ -28,6 +31,7 @@ class APIfIltering {
         this.modelQuery =  this.modelQuery.select(fields);
         return this;
     }
+    
     paginate(){
         let page = 1;
         let limit = 10;

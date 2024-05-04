@@ -16,7 +16,7 @@ function getDaysDifference(date1, date2) {
 function getChanges(plant_details, current_weather) {
   let optimal_weather = Number(plant_details["optimal_weather"]);
   let humidity = Number(plant_details["humidity"]);
-  plant_details["humidity"] = humidity * (1 + (current_weather - optimal_weather)/20);
+  plant_details["humidity"] = humidity * (1 + (current_weather - optimal_weather) / 20);
   return plant_details;
 }
 

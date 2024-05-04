@@ -149,14 +149,3 @@ exports.addPlantToUser =  asyncWrapper(async (req, res, next) =>{
         data:user
     })
 });
-
-// exports.addImages = asyncWrapper(async(req , res, next) =>{
-//     const added = await User.findByIdAndUpdate(req.user._id,{images:req.body.images});
-//     if(!added){
-//         return next(createCustomError("Not valid", 404))
-//     }
-//     res.status(200).json({
-//         status:'succes',
-//         data:added
-//     })
-// })

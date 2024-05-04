@@ -3,8 +3,6 @@ const asyncWrapper = require('../middleware/async');
 const { createCustomError } = require('../middleware/custom-error');
 const { default: mongoose } = require('mongoose');
 
-
-
 exports.getAllLocatins = asyncWrapper(async (req, res, next) =>{
     const locatins = await Locations.find({});
     res.status(200).json({
@@ -23,7 +21,7 @@ exports.getLocation = asyncWrapper(async(req, res, next) =>{
         status:'success',
         details:location
     })
-})
+});
 
 exports.addLocation = asyncWrapper(async (req, res, next) =>{
     if(!req.body.location) return next(createCustomError('No Valid Data !!!', 400));
@@ -59,8 +57,4 @@ exports.editLocation = asyncWrapper(async (req, res, next) =>{
         status:'success',
         details:location
     })
-})
-
-
-
-
+});

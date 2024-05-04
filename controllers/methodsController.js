@@ -20,10 +20,9 @@ exports.getMethod = asyncWrapper(async(req, res, next) =>{
         status:'success',
         details:method
     })
-})
+});
 
 exports.addMethod = asyncWrapper(async (req, res, next) =>{
-
     if(!req.body.method) return next(createCustomError('No Valid Data !!!', 400));
     const data = {method:req.body.method}
     
@@ -59,4 +58,4 @@ exports.editMethod = asyncWrapper(async (req, res, next) =>{
         status:'success',
         details:method
     })
-})
+});
