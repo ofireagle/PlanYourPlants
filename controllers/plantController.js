@@ -88,7 +88,7 @@ exports.updatPlant = asyncWrapper(async (req, res, next) =>{
     const {id:plant_id} = req.params
     if(!mongoose.Types.ObjectId.isValid(plant_id)) return next (createCustomError('No Data Enter, or not valid id', 404))
 
-    const data = filterObj(req.body, 'name', 'imgUrl', 'description');
+    const data = filterObj(req.body, 'name', 'imgUrl', 'description', 'creator');
     const plant = await Plant.findOneAndUpdate({_id:plant_id},data,{
         new:true,
         runValidators:true
