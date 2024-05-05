@@ -184,6 +184,7 @@ exports.getPlan = asyncWrapper(async(req, res, next) => {
     const weatherData = await weather_api.getCurrentWeather(user.city);
 
     const plants = await Plant.find({'_id' : { $in: user.plants } });
+
     if(!plants) return next(createCustomError('Bad data', 400));
     var families = [];
     for (let i = 0; i < plants.length; i++){
@@ -205,8 +206,10 @@ exports.getPlan = asyncWrapper(async(req, res, next) => {
         family.optimal_weather = f.optimal_weather;
         families.push(family);
     }
-    families = families.filter((obj, index, self) =>
-        index === self.findIndex((t) => (t._id.equals(obj._id))));
+//    families = families.filter((obj, index, self) =>
+//         index === self.findIndex((t) => (t._id.equals(obj._id))));
+//     console.log(families);
+// console.log(families);
     const main_api = await MainApi.calculate(user.date_created, plants, families, weatherData.current.temp_c);
     res.status(200).json({
         status:'success',
@@ -242,17 +245,20 @@ const doPlantAction = async(plant, family, response, userID) =>{
             const updatePlantImg = await Plant.findOneAndUpdate({_id: plant._id},{imgUrl: response.plant_details.image.value})
         }
         if(!plant.description){
-            const updatePlantImg = await Plant.findOneAndUpdate({_id: plant._id},{ description: response.details.plant_details.wiki_description.value})
+            const updatePlantImg = await Plant.findOneAndUpdate({_id: plant._id},{ description: response.plant_details.wiki_description.value})
         }
         return {msg: 'Plant alerady exist in DB' , plant: plant};
     }
     else if(!plant && family){
-        const plantSchema = {name: response.plant_name, family: family._id, creator: userID, imgUrl: response.plant_details.image.value, description: response.details.plant_details.wiki_description.value}
+        const plantSchema = {name: response.plant_name, family: family._id, creator: userID, imgUrl: response.plant_details.image.value, description: response.plant_details.wiki_description.value}
         const newPlant = await Plant.create(plantSchema);
         const user = await User.findById(userID)
         if(user){
-            user.newPlants.push(newPlant._id);
-            await user.save();
+            let updateUserNewPlants = await User.findOneAndUpdate(
+                { _id: user._id },
+                { $push: { newPlants: newPlant._id } },
+                { new: true }
+            );
         }
         return {msg: 'Plant Added to DB successfully' ,new_Plant: newPlant};
     }
