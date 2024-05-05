@@ -16,20 +16,25 @@ function getDaysDifference(date1, date2) {
 function getChanges(plant_details, current_weather) {
   let optimal_weather = Number(plant_details["optimal_weather"]);
   let humidity = Number(plant_details["humidity"]);
-  plant_details["humidity"] = humidity * (1 + (current_weather - optimal_weather) / 20);
+  plant_details["humidity"] = (humidity * (1 + (current_weather - optimal_weather) / 20)).toFixed(1) + "L";
   return plant_details;
 }
 
 async function calculate(start_date, plants, families, current_weather) {
-  var res = []
+  let res = []
   plants.forEach(async plant => {
-    const diff_days = getDaysDifference(start_date, new Date());
-    let plant_details = families.filter(obj => obj._id.equals(plant.family))[0];
-    plant_details.family_name = plant.name;
-    let plantFreq = parseInt(plant_details["frequency_of_irrigation"])
-    if(diff_days % plantFreq == 0) {
-      plant_details = getChanges(plant_details, current_weather);
-      res.push(plant_details)
+    try{
+      const diff_days = getDaysDifference(start_date, new Date());
+      let plant_details = families.filter(obj => obj._id.equals(plant.family))[0];
+      plant_details._id = plant._id;
+      plant_details.name = plant.name;
+      let plantFreq = parseInt(plant_details["frequency_of_irrigation"])
+      if(diff_days % plantFreq == 0) {
+        plant_details = getChanges(plant_details, current_weather);
+        res.push(plant_details)
+      }
+    }catch(err){
+      console.log(err);
     }
   });
   return res;
