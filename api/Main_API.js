@@ -25,7 +25,8 @@ async function calculate(start_date, plants, families, current_weather) {
   plants.forEach(async plant => {
     try{
       const diff_days = getDaysDifference(start_date, new Date());
-      let plant_details = families.filter(obj => obj._id.equals(plant.family))[0];
+      let family_details = families.filter(obj => obj._id.equals(plant.family))[0];
+      var plant_details = JSON.parse(JSON.stringify(family_details));
       plant_details._id = plant._id;
       plant_details.name = plant.name;
       let plantFreq = parseInt(plant_details["frequency_of_irrigation"])
